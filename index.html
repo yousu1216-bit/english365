@@ -1,0 +1,1083 @@
+<!doctype html>  
+<html lang="ko">  
+<head>  
+  <meta charset="utf-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <meta name="theme-color" content="#0b1220" />  
+  <meta name="apple-mobile-web-app-capable" content="yes" />  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />  
+  <link rel="manifest" href="manifest.webmanifest" />  
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />  
+  <link rel="apple-touch-icon" href="icon.svg" />  
+  <title>365 English Speaking Plan</title>  
+  
+  <style>  
+    :root{  
+      --bg:#0b1220; --panel:#121a2b; --panel2:#0f1728; --text:#e7eefc; --muted:#a9b7d5;  
+      --accent:#4da3ff; --ok:#2dd4bf; --warn:#fbbf24; --bad:#fb7185; --line:#23304a;  
+      --chip:#1a2540; --radius:14px;  
+    }  
+    *{box-sizing:border-box}  
+    body{margin:0;background:linear-gradient(180deg,#081022 0%, #0b1220 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}  
+    a{color:var(--accent)}  
+    .wrap{max-width:1120px;margin:0 auto;padding:18px}  
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}  
+    .title{display:flex;flex-direction:column;gap:4px}  
+    h1{font-size:18px;margin:0}  
+    .sub{font-size:12px;color:var(--muted)}  
+    .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}  
+    button, select, input[type="number"], input[type="date"]{  
+      background:var(--panel); color:var(--text); border:1px solid var(--line);  
+      padding:10px 12px; border-radius:12px; font-size:14px; outline:none;  
+    }  
+    button{cursor:pointer}  
+    button.primary{border-color:rgba(77,163,255,.6); background:linear-gradient(180deg,#173055,#121a2b)}  
+    button.ghost{background:transparent}  
+    button:active{transform:translateY(1px)}  
+    .grid{display:grid;grid-template-columns: 380px 1fr; gap:14px; margin-top:14px}  
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }  
+    .card{  
+      background:linear-gradient(180deg, rgba(18,26,43,.95) 0%, rgba(15,23,40,.95) 100%);  
+      border:1px solid var(--line); border-radius:var(--radius); padding:14px;  
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);  
+    }  
+    .card h2{font-size:14px;margin:0 0 10px 0;color:#d9e6ff}  
+    .muted{color:var(--muted); font-size:12px}  
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}  
+    .pill{background:var(--chip); border:1px solid var(--line); padding:6px 10px; border-radius:999px; font-size:12px}  
+    .divider{height:1px;background:var(--line); margin:12px 0}  
+    .planLine{display:flex;flex-direction:column;gap:8px}  
+    .planBig{font-size:16px;font-weight:650}  
+    .planSmall{font-size:13px;color:var(--muted); line-height:1.4}  
+    .checklist{display:grid;grid-template-columns:1fr 1fr; gap:10px}  
+    @media (max-width: 520px){ .checklist{grid-template-columns:1fr} }  
+    label.chk{  
+      display:flex;gap:10px;align-items:flex-start;  
+      background:rgba(0,0,0,.12); border:1px solid var(--line); padding:10px; border-radius:12px;  
+    }  
+    input[type="checkbox"]{transform:scale(1.1); margin-top:2px}  
+    textarea{  
+      width:100%; min-height:72px; resize:vertical;  
+      background:rgba(0,0,0,.12); color:var(--text); border:1px solid var(--line);  
+      padding:10px 12px; border-radius:12px; outline:none; font-size:13px; line-height:1.4;  
+    }  
+    .toast{  
+      position:fixed; bottom:18px; left:50%; transform:translateX(-50%);  
+      background:rgba(18,26,43,.95); border:1px solid var(--line); padding:10px 14px;  
+      border-radius:999px; font-size:12px; color:var(--text); display:none;  
+      box-shadow:0 10px 30px rgba(0,0,0,.3);  
+      z-index: 999;  
+    }  
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap}  
+    .mini{padding:8px 10px; border-radius:10px; font-size:12px}  
+    .danger{color:var(--bad)}  
+    .ok{color:var(--ok)}  
+    .meter{height:10px; width:240px; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:999px; overflow:hidden}  
+    .meter > div{height:100%; background:linear-gradient(90deg, var(--ok), var(--accent)); width:0%}  
+  
+    /* Chunks */  
+    .chunkBox{  
+      border:1px solid var(--line); background:rgba(0,0,0,.12); border-radius:12px; padding:10px;  
+      display:flex; flex-direction:column; gap:8px;  
+    }  
+    .chunkItem{  
+      display:flex; gap:10px; align-items:flex-start;  
+      padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,.06);  
+      background:rgba(255,255,255,.02);  
+    }  
+    .chunkNum{width:24px; height:24px; border-radius:999px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--muted)}  
+    .chunkText{flex:1}  
+    .chunkText b{display:block; font-size:13px}  
+    .chunkText div{font-size:12px;color:var(--muted); line-height:1.35}  
+  
+    /* Calendar */  
+    .calTop{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}  
+    .calGrid{display:grid; grid-template-columns:repeat(7, 1fr); gap:8px; margin-top:10px}  
+    .dow{font-size:11px; color:var(--muted); text-align:center; padding:6px 0}  
+    .calCell{  
+      border:1px solid var(--line); border-radius:12px; padding:8px;  
+      background:rgba(0,0,0,.10); min-height:72px; cursor:pointer;  
+      display:flex; flex-direction:column; gap:6px;  
+    }  
+    .calCell:hover{background:rgba(255,255,255,.04)}  
+    .calCell .dateLine{display:flex; justify-content:space-between; align-items:center}  
+    .calCell .dateNum{font-size:12px; color:#d9e6ff}  
+    .calCell .dayBadge{font-size:11px; color:var(--muted)}  
+    .calCell .miniTag{font-size:10px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}  
+    .calCell.done{border-color:rgba(45,212,191,.5)}  
+    .calCell.today{outline:2px solid rgba(77,163,255,.55)}  
+    .calCell.out{opacity:.35}  
+  
+    /* Table */  
+    table{width:100%; border-collapse:collapse; font-size:12px}  
+    th, td{border-bottom:1px solid var(--line); padding:10px 8px; text-align:left; vertical-align:top}  
+    th{color:#d9e6ff; font-weight:650}  
+    tr:hover td{background:rgba(255,255,255,.03)}  
+  </style>  
+</head>  
+  
+<body>  
+<div class="wrap">  
+  <header>  
+    <div class="title">  
+      <h1>365 English Speaking Plan</h1>  
+      <div class="sub">캘린더(월간) · Day별 Chunks(6개) · 체크/오답/메모 저장 · PWA(홈화면)</div>  
+    </div>  
+  
+    <div class="bar">  
+      <button class="ghost" id="btnToday">오늘(미완료 첫 Day)</button>  
+      <span class="pill">Day <b id="dayLabel">1</b> / 365</span>  
+      <input type="number" id="dayInput" min="1" max="365" value="1" style="width:110px" />  
+      <button class="primary" id="btnGo">이동</button>  
+      <button class="ghost" id="btnPrev">◀</button>  
+      <button class="ghost" id="btnNext">▶</button>  
+    </div>  
+  </header>  
+  
+  <!-- Calendar -->  
+  <section class="card" style="margin-top:14px">  
+    <div class="calTop">  
+      <div class="row" style="gap:8px">  
+        <h2 style="margin:0">월간 캘린더</h2>  
+        <span class="pill">Start date</span>  
+        <input type="date" id="startDate" />  
+        <span class="muted">Start date 기준으로 Day 1~365를 달력에 배치합니다.</span>  
+      </div>  
+      <div class="row">  
+        <button class="ghost" id="calPrev">이전 달</button>  
+        <span class="pill" id="calMonthLabel">-</span>  
+        <button class="ghost" id="calNext">다음 달</button>  
+      </div>  
+    </div>  
+  
+    <div class="calGrid" id="calDows"></div>  
+    <div class="calGrid" id="calGrid"></div>  
+  </section>  
+  
+  <div class="grid">  
+    <!-- LEFT -->  
+    <section class="card" id="leftCard">  
+      <h2>오늘의 계획</h2>  
+  
+      <div class="planLine">  
+        <div class="planBig" id="scenarioTitle">Cafe order (options)</div>  
+        <div class="planSmall" id="scenarioMeta">  
+          Theme: <span class="pill" id="themePill">Survival</span>  
+          <span class="pill">Cycle <b id="cycleLabel">1</b></span>  
+          <span class="pill">Week <b id="weekLabel">1</b> / 4</span>  
+          <span class="pill">Code <b id="codeLabel">ORDER-1</b></span>  
+        </div>  
+  
+        <div class="divider"></div>  
+  
+        <div class="muted">Cycle 목표(난이도 상승)</div>  
+        <div class="planSmall" id="cycleFocus">Foundation</div>  
+        <div class="planSmall" id="cycleUpgrade">Chunks 6/day, clear pronunciation, short answers</div>  
+  
+        <div class="divider"></div>  
+  
+        <div class="muted">Daily Core Routine (30m)</div>  
+        <div class="planSmall" id="routineText">3m warm-up + 7m chunks(6) + 7m pattern drills + 10m role-play(2) + 3m error log(3)</div>  
+  
+        <div class="muted" style="margin-top:8px">Optional (10m)</div>  
+        <div class="planSmall" id="optText">5m shadowing + 5m 45s recording</div>  
+  
+        <div class="divider"></div>  
+  
+        <div class="muted">Chunks (핵심문장 6개)</div>  
+        <div class="chunkBox" id="chunksBox"></div>  
+  
+        <div class="divider"></div>  
+  
+        <div class="row" style="justify-content:space-between; align-items:center">  
+          <div class="row" style="gap:10px">  
+            <div class="meter"><div id="meterBar"></div></div>  
+            <div class="muted">완료율 <b id="donePct">0%</b> · 완료 <b id="doneDays">0</b>/365</div>  
+          </div>  
+          <div class="btnRow">  
+            <button class="mini" id="btnResetDay">오늘만 초기화</button>  
+            <button class="mini danger" id="btnResetAll">전체 초기화</button>  
+          </div>  
+        </div>  
+      </div>  
+    </section>  
+  
+    <!-- RIGHT -->  
+    <section class="card">  
+      <h2>체크 폼 (오늘)</h2>  
+      <div class="checklist" id="checklist"></div>  
+  
+      <div class="divider"></div>  
+  
+      <h2>오답/교정 로그 (오늘 3개)</h2>  
+      <div id="errorsGrid" style="display:grid; gap:10px"></div>  
+  
+      <div class="divider"></div>  
+  
+      <h2>메모</h2>  
+      <textarea id="memo" placeholder="오늘 막힌 표현 / 다음에 쓸 문장 / 발음 포인트 등을 적어두세요."></textarea>  
+  
+      <div class="divider"></div>  
+  
+      <div class="row">  
+        <button class="primary" id="btnSave">저장</button>  
+        <button class="ghost" id="btnExport">내보내기(JSON)</button>  
+        <button class="ghost" id="btnImport">가져오기(JSON)</button>  
+        <input type="file" id="importFile" accept="application/json" style="display:none" />  
+      </div>  
+    </section>  
+  </div>  
+  
+  <!-- Summary table -->  
+  <section class="card" style="margin-top:14px">  
+    <div class="row" style="justify-content:space-between">  
+      <h2 style="margin:0">365일 표(요약)</h2>  
+      <div class="row">  
+        <select id="filterCycle">  
+          <option value="all">모든 Cycle</option>  
+        </select>  
+        <select id="filterTheme">  
+          <option value="all">모든 Theme</option>  
+          <option value="Survival">Survival</option>  
+          <option value="Routine">Routine</option>  
+          <option value="Problem">Problem</option>  
+          <option value="Social">Social</option>  
+          <option value="Review">Review</option>  
+          <option value="Test">Test</option>  
+          <option value="Final">Final</option>  
+        </select>  
+        <button class="ghost" id="btnUndoneOnly">미완료만</button>  
+      </div>  
+    </div>  
+    <div class="muted" style="margin:8px 0 10px">표에서 Day 클릭 → 해당 Day로 이동</div>  
+    <div style="overflow:auto; border:1px solid var(--line); border-radius:12px">  
+      <table>  
+        <thead>  
+          <tr>  
+            <th style="width:70px">Day</th>  
+            <th style="width:70px">Cycle</th>  
+            <th style="width:90px">Week</th>  
+            <th style="width:110px">Theme</th>  
+            <th>Scenario</th>  
+            <th style="width:95px">Code</th>  
+            <th style="width:90px">Done</th>  
+          </tr>  
+        </thead>  
+        <tbody id="planTbody"></tbody>  
+      </table>  
+    </div>  
+  </section>  
+</div>  
+  
+<div class="toast" id="toast">Saved</div>  
+  
+<script>  
+/* =========================  
+   0) PWA: service worker 등록  
+   ========================= */  
+if ("serviceWorker" in navigator) {  
+  window.addEventListener("load", () => {  
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});  
+  });  
+}  
+  
+/* =========================  
+   1) 28일 시나리오 맵 + 13회전 업그레이드  
+   ========================= */  
+const dayMap = [  
+  {d:1,  theme:"Survival", scenario:"Cafe order (options)", code:"ORDER-1"},  
+  {d:2,  theme:"Survival", scenario:"Restaurant order (recommendations/allergies)", code:"ORDER-2"},  
+  {d:3,  theme:"Survival", scenario:"Shopping (size/color/price/stock)", code:"SHOP-1"},  
+  {d:4,  theme:"Survival", scenario:"Directions (walk/subway/bus)", code:"MOVE-1"},  
+  {d:5,  theme:"Survival", scenario:"Hotel check-in/out", code:"TRAVEL-1"},  
+  {d:6,  theme:"Review",   scenario:"Review role-play (Day1–5)", code:"REVIEW-A"},  
+  {d:7,  theme:"Test",     scenario:"Free talk test (1–3 min)", code:"TEST-A"},  
+  
+  {d:8,  theme:"Routine",  scenario:"Scheduling (when/what time)", code:"TIME-1"},  
+  {d:9,  theme:"Routine",  scenario:"Change/cancel/late", code:"TIME-2"},  
+  {d:10, theme:"Routine",  scenario:"Weather + plans", code:"SMALL-1"},  
+  {d:11, theme:"Routine",  scenario:"Hobbies + routines", code:"SMALL-2"},  
+  {d:12, theme:"Routine",  scenario:"Phone basics", code:"PHONE-1"},  
+  {d:13, theme:"Review",   scenario:"Review role-play (Day8–12)", code:"REVIEW-B"},  
+  {d:14, theme:"Test",     scenario:"Weekly test (3 min conversation)", code:"TEST-B"},  
+  
+  {d:15, theme:"Problem",  scenario:"Explain a problem (doesn't work/missing)", code:"PROB-1"},  
+  {d:16, theme:"Problem",  scenario:"Exchange/refund/receipt", code:"PROB-2"},  
+  {d:17, theme:"Problem",  scenario:"Reservation change/rebook", code:"TRAVEL-2"},  
+  {d:18, theme:"Problem",  scenario:"Lost & found / help request", code:"PROB-3"},  
+  {d:19, theme:"Problem",  scenario:"Pharmacy/health (symptoms)", code:"HEALTH-1"},  
+  {d:20, theme:"Review",   scenario:"Review role-play (Day15–19)", code:"REVIEW-C"},  
+  {d:21, theme:"Test",     scenario:"Random simulation (3 scenarios)", code:"TEST-C"},  
+  
+  {d:22, theme:"Social",   scenario:"Self-intro (expanded)", code:"SOC-1"},  
+  {d:23, theme:"Social",   scenario:"Small talk (reactions + follow-up Qs)", code:"SOC-2"},  
+  {d:24, theme:"Social",   scenario:"Opinions & preferences", code:"SOC-3"},  
+  {d:25, theme:"Social",   scenario:"Suggest/decline/alternative", code:"SOC-4"},  
+  {d:26, theme:"Social",   scenario:"Requests & cooperation (polite)", code:"SOC-5"},  
+  {d:27, theme:"Review",   scenario:"Review role-play (Day22–26)", code:"REVIEW-D"},  
+  {d:28, theme:"Test",     scenario:"Monthly test (5 min mixed)", code:"TEST-D"},  
+];  
+  
+const cycleUpgrades = [  
+  {cycle:1,  focus:"Foundation",       upgrade:"Chunks 6/day, clear pronunciation, short answers"},  
+  {cycle:2,  focus:"Politeness",       upgrade:"Softeners: could/would, please, a bit, maybe"},  
+  {cycle:3,  focus:"Past",             upgrade:"Past experiences: I went / I tried / It was…"},  
+  {cycle:4,  focus:"Future",           upgrade:"Plans: I’m going to / I’ll / I’d like to…"},  
+  {cycle:5,  focus:"Reasons & Compare",upgrade:"because, but, and; compare: better/cheaper"},  
+  {cycle:6,  focus:"Problem-solving",  upgrade:"clarify + confirm: So you mean… / Let me check"},  
+  {cycle:7,  focus:"Work-lite",        upgrade:"simple work talk: schedule, request, status update"},  
+  {cycle:8,  focus:"Storytelling",     upgrade:"5W1H recap in 60–90 seconds"},  
+  {cycle:9,  focus:"Negotiate",        upgrade:"compromise: Could we…? How about…?"},  
+  {cycle:10, focus:"Speed & Fillers",  upgrade:"natural fillers + faster turn-taking"},  
+  {cycle:11, focus:"Intonation",       upgrade:"stress/intonation focus; sound more natural"},  
+  {cycle:12, focus:"Minimal hints",    upgrade:"same scenarios with fewer prompts; self-correction"},  
+  {cycle:13, focus:"Mastery",          upgrade:"spontaneous variants; longer role-plays; accuracy"},  
+];  
+  
+function buildPlan() {  
+  const plan = [];  
+  for (let day=1; day<=365; day++){  
+    if (day<=364){  
+      const cycle = Math.floor((day-1)/28) + 1;  
+      const dayInCycle = ((day-1) % 28) + 1;  
+      const weekInCycle = Math.floor((dayInCycle-1)/7) + 1;  
+      const info = dayMap.find(x => x.d === dayInCycle);  
+      const cu = cycleUpgrades.find(x => x.cycle === cycle);  
+      plan.push({  
+        day, cycle, weekInCycle, dayInCycle,  
+        theme: info.theme, scenario: info.scenario, code: info.code,  
+        cycleFocus: cu.focus, cycleUpgrade: cu.upgrade,  
+        routine: "3m warm-up + 7m chunks(6) + 7m pattern drills + 10m role-play(2) + 3m error log(3)",  
+        optional: "5m shadowing + 5m 45s recording",  
+      });  
+    } else {  
+      plan.push({  
+        day:365, cycle:"Final", weekInCycle:"", dayInCycle:"",  
+        theme:"Final",  
+        scenario:"Final assessment: 10-min mixed role-plays + 3-min free talk + top 20 error fixes",  
+        code:"FINAL",  
+        cycleFocus:"Assessment",  
+        cycleUpgrade:"Measure fluency/accuracy; lock in personal phrase bank",  
+        routine:"10m mixed role-plays + 10m free talk + 10m corrections & next-year plan",  
+        optional:"Re-record after corrections",  
+      });  
+    }  
+  }  
+  return plan;  
+}  
+const PLAN = buildPlan();  
+  
+/* =========================  
+   2) Chunks(각 DayInCycle = 6문장)  
+   - 365일은 28일 반복이므로 28세트만 정의하면 됩니다.  
+   ========================= */  
+const chunkMap = {  
+  1: [  
+    ["Can I get a latte, please?", "기본 주문"],  
+    ["I’ll have it iced / hot.", "온도 선택"],  
+    ["Can you make it decaf?", "디카페인 요청"],  
+    ["No sugar, please.", "당도/첨가 요청"],  
+    ["How much is it?", "가격 질문"],  
+    ["Can I pay by card?", "결제 수단"],  
+  ],  
+  2: [  
+    ["Could I see the menu, please?", "메뉴 요청"],  
+    ["What do you recommend?", "추천 요청"],  
+    ["I’m allergic to nuts.", "알레르기 고지"],  
+    ["Can I get this without onions?", "재료 제외 요청"],  
+    ["Could we have the bill, please?", "계산 요청"],  
+    ["Can I get it to go?", "포장 요청"],  
+  ],  
+  3: [  
+    ["I’m looking for a T-shirt.", "찾는 물건"],  
+    ["Do you have this in a medium?", "사이즈 문의"],  
+    ["Do you have it in another color?", "색상 문의"],  
+    ["How much is this?", "가격"],  
+    ["Can I try it on?", "착용 요청"],  
+    ["Do you have this in stock?", "재고 여부"],  
+  ],  
+  4: [  
+    ["Excuse me, how do I get to the station?", "길 묻기"],  
+    ["Is it far from here?", "거리"],  
+    ["Can I walk there?", "도보 가능 여부"],  
+    ["Which line should I take?", "노선 질문"],  
+    ["Where is the nearest bus stop?", "정류장 위치"],  
+    ["How long does it take?", "소요 시간"],  
+  ],  
+  5: [  
+    ["I have a reservation under (name).", "예약 확인"],  
+    ["Could I check in, please?", "체크인"],  
+    ["What time is check-out?", "체크아웃 시간"],  
+    ["Could I get a room key, please?", "키 요청"],  
+    ["Is breakfast included?", "조식 포함 여부"],  
+    ["Could I have a late check-out?", "레이트 체크아웃"],  
+  ],  
+  6: [  
+    ["Let’s review Day 1–5.", "리뷰 안내"],  
+    ["Role-play: order → clarify → pay.", "롤플레이 흐름"],  
+    ["Use 6 chunks from each day.", "Chunk 재사용"],  
+    ["Ask 3 follow-up questions.", "추가 질문"],  
+    ["Fix 3 recurring errors.", "오답 3개 고정"],  
+    ["Repeat the full dialogue twice.", "반복"],  
+  ],  
+  7: [  
+    ["Free talk: 1–3 minutes.", "자유말"],  
+    ["Start with: Today I… / I went…", "시작 문장"],  
+    ["Use 3 connectors: and / but / because.", "연결어"],  
+    ["Ask me 2 questions back.", "질문 되돌리기"],  
+    ["Self-correct once if needed.", "자기 교정"],  
+    ["Log top 3 issues.", "문제 3개 기록"],  
+  ],  
+  8: [  
+    ["Are you free this (day)?", "시간 확인"],  
+    ["What time works for you?", "시간 조율"],  
+    ["Let’s meet at 3 p.m.", "약속 제안"],  
+    ["Could we reschedule?", "변경 요청"],  
+    ["I’ll be there in 10 minutes.", "도착 예정"],  
+    ["See you then.", "마무리"],  
+  ],  
+  9: [  
+    ["I’m running a bit late.", "지각"],  
+    ["Can we push it back 30 minutes?", "미루기"],  
+    ["Something came up.", "사정 설명"],  
+    ["I have to cancel today.", "취소"],  
+    ["Can we do it tomorrow instead?", "대안 제시"],  
+    ["Sorry for the inconvenience.", "사과"],  
+  ],  
+  10: [  
+    ["What’s the weather like today?", "날씨"],  
+    ["It’s going to rain.", "예보"],  
+    ["I’m going to stay in.", "계획"],  
+    ["Let’s grab coffee later.", "제안"],  
+    ["That sounds good.", "동의"],  
+    ["Maybe next time.", "완곡 거절"],  
+  ],  
+  11: [  
+    ["What do you do in your free time?", "취미 질문"],  
+    ["I usually work out after work.", "루틴"],  
+    ["I’m into (hiking / movies).", "관심사"],  
+    ["I started learning English recently.", "근황"],  
+    ["Do you have any recommendations?", "추천 요청"],  
+    ["Sounds fun.", "리액션"],  
+  ],  
+  12: [  
+    ["Hello, this is (name).", "전화 시작"],  
+    ["Is (person) available?", "연결 요청"],  
+    ["Can I leave a message?", "메시지 남기기"],  
+    ["Could you repeat that?", "다시 말해달라"],  
+    ["I’ll call back later.", "다시 전화"],  
+    ["Thank you for your help.", "마무리"],  
+  ],  
+  13: [  
+    ["Let’s review Day 8–12.", "리뷰 안내"],  
+    ["Role-play: schedule → change → confirm.", "흐름"],  
+    ["Use polite requests: could / would.", "정중 표현"],  
+    ["Add one reason (because…).", "이유 추가"],  
+    ["Fix 3 recurring errors.", "오답 3개"],  
+    ["Repeat twice, faster second time.", "속도↑"],  
+  ],  
+  14: [  
+    ["Weekly test: 3-min conversation.", "주간 테스트"],  
+    ["Include: time, plan, change, phone.", "범위"],  
+    ["Ask 3 questions + answer 3.", "Q/A"],  
+    ["Use 5 key chunks without reading.", "암기"],  
+    ["Note 3 weak spots.", "약점 3개"],  
+    ["Rewrite them as correct chunks.", "정답화"],  
+  ],  
+  15: [  
+    ["There’s a problem with this.", "문제 제기"],  
+    ["It doesn’t work.", "고장"],  
+    ["It’s missing a part.", "누락"],  
+    ["I bought it yesterday.", "구매 정보"],  
+    ["Can you take a look?", "확인 요청"],  
+    ["What are my options?", "해결책 질문"],  
+  ],  
+  16: [  
+    ["I’d like to return this.", "환불"],  
+    ["I’d like to exchange this.", "교환"],  
+    ["Do I need the receipt?", "영수증"],  
+    ["It’s within 7 days.", "기간"],  
+    ["Could I get a refund?", "환불 요청"],  
+    ["Is there a restocking fee?", "수수료"],  
+  ],  
+  17: [  
+    ["I’d like to change my reservation.", "예약 변경"],  
+    ["Can I move it to Friday?", "날짜 변경"],  
+    ["What times are available?", "가능 시간"],  
+    ["Could you confirm it by email?", "확인 요청"],  
+    ["My booking number is ____.", "예약 번호"],  
+    ["Thank you for your flexibility.", "마무리"],  
+  ],  
+  18: [  
+    ["I lost my (wallet / phone).", "분실"],  
+    ["Where is the lost and found?", "분실물 센터"],  
+    ["Can you help me report it?", "신고 도움"],  
+    ["When did you last see it?", "확인 질문 대응"],  
+    ["Could you call this number?", "연락 요청"],  
+    ["I really appreciate it.", "감사"],  
+  ],  
+  19: [  
+    ["I have a sore throat.", "증상"],  
+    ["I’ve had it for two days.", "기간"],  
+    ["Do you have something for a cough?", "약 요청"],  
+    ["Any side effects?", "부작용"],  
+    ["How often should I take it?", "복용법"],  
+    ["Should I see a doctor?", "의사 필요 여부"],  
+  ],  
+  20: [  
+    ["Let’s review Day 15–19.", "리뷰"],  
+    ["Role-play: problem → clarify → solution.", "흐름"],  
+    ["Confirm details: date / receipt / symptoms.", "세부 확인"],  
+    ["Use 2 polite phrases.", "정중"],  
+    ["Fix 3 recurring errors.", "오답"],  
+    ["Repeat the solution summary.", "요약 반복"],  
+  ],  
+  21: [  
+    ["Random simulation: 3 scenarios.", "랜덤"],  
+    ["Start each with a clear request.", "요청"],  
+    ["Ask 2 follow-up questions.", "추가 질문"],  
+    ["Confirm with: So, just to confirm…", "확인"],  
+    ["Close politely.", "마무리"],  
+    ["Log top 3 issues.", "기록"],  
+  ],  
+  22: [  
+    ["Nice to meet you. I’m (name).", "인사"],  
+    ["I’m from (city), but I live in ____.", "출신/거주"],  
+    ["I work in construction.", "직업"],  
+    ["I’m interested in (topic).", "관심사"],  
+    ["What do you do?", "상대 질문"],  
+    ["Let’s keep in touch.", "마무리"],  
+  ],  
+  23: [  
+    ["How’s your day going?", "스몰톡 시작"],  
+    ["Really? That’s interesting.", "리액션"],  
+    ["How come?", "이유 묻기"],  
+    ["What did you do last weekend?", "과거 질문"],  
+    ["That makes sense.", "공감"],  
+    ["Tell me more.", "확장"],  
+  ],  
+  24: [  
+    ["I think (this) is better.", "의견"],  
+    ["I prefer (A) over (B).", "선호"],  
+    ["In my opinion, …", "의견"],  
+    ["It depends.", "조건부"],  
+    ["For me, …", "개인 기준"],  
+    ["What do you think?", "상대 의견"],  
+  ],  
+  25: [  
+    ["How about we get dinner?", "제안"],  
+    ["Sure, that works.", "수락"],  
+    ["I’d love to, but I can’t.", "완곡 거절"],  
+    ["Maybe another time.", "대안"],  
+    ["What about Friday instead?", "대체안"],  
+    ["Let’s decide later.", "유예"],  
+  ],  
+  26: [  
+    ["Could you help me with this?", "도움 요청"],  
+    ["Would you mind…?", "정중"],  
+    ["Could you please send it to me?", "요청"],  
+    ["I’d really appreciate it.", "감사"],  
+    ["No worries.", "응답"],  
+    ["Thanks, that helps a lot.", "마무리"],  
+  ],  
+  27: [  
+    ["Let’s review Day 22–26.", "리뷰"],  
+    ["Role-play: intro → small talk → plan.", "흐름"],  
+    ["Use 2 reactions + 2 questions.", "리액션/질문"],  
+    ["Add one opinion + one preference.", "의견/선호"],  
+    ["Fix 3 recurring errors.", "오답"],  
+    ["Repeat once with faster tempo.", "속도↑"],  
+  ],  
+  28: [  
+    ["Monthly test: 5-min mixed talk.", "월간 테스트"],  
+    ["Include 2 scenarios + 1 small talk.", "구성"],  
+    ["Use connectors: actually / because / so.", "연결어"],  
+    ["Ask 5 questions total.", "질문"],  
+    ["Self-correct twice.", "자기 교정"],  
+    ["Pick top 5 chunks to keep.", "최종 선별"],  
+  ]  
+};  
+  
+function getChunksForDay(planItem){  
+  if (planItem.day === 365){  
+    return [  
+      ["10-min mixed role-plays", "핵심 상황 3개 이상 섞기"],  
+      ["3-min free talk", "자유대화(주제 1개)"],  
+      ["Accuracy check", "자주 틀리는 20개 점검"],  
+      ["Fluency check", "멈춤/버벅임 패턴 기록"],  
+      ["Personal phrase bank", "내 문장 50개 확정"],  
+      ["Next plan", "다음 90일 목표 설정"],  
+    ];  
+  }  
+  return chunkMap[planItem.dayInCycle] || [  
+    ["Chunks not defined", "—"],["—","—"],["—","—"],["—","—"],["—","—"],["—","—"]  
+  ];  
+}  
+  
+/* =========================  
+   3) 저장(localStorage)  
+   ========================= */  
+const STORAGE_KEY = "english365_progress_v2";  
+const STARTDATE_KEY = "english365_startdate_v1";  
+  
+function loadProgress(){  
+  try{  
+    const raw = localStorage.getItem(STORAGE_KEY);  
+    if(!raw) return {};  
+    return JSON.parse(raw);  
+  }catch(e){ return {}; }  
+}  
+function saveProgress(obj){  
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));  
+}  
+let progress = loadProgress();  
+  
+const defaultDayState = () => ({  
+  checks:{  
+    warmup:false, chunks:false, drills:false, roleplay:false, errorlog:false,  
+    shadowing:false, recording:false, email:false  
+  },  
+  errors:[  
+    {wrong:"", correct:"", situation:""},  
+    {wrong:"", correct:"", situation:""},  
+    {wrong:"", correct:"", situation:""},  
+  ],  
+  memo:""  
+});  
+  
+function getDayState(day){  
+  const k = String(day);  
+  if(!progress[k]) progress[k] = defaultDayState();  
+  if(!progress[k].checks) progress[k].checks = defaultDayState().checks;  
+  if(!progress[k].errors) progress[k].errors = defaultDayState().errors;  
+  if(typeof progress[k].memo !== "string") progress[k].memo = "";  
+  return progress[k];  
+}  
+  
+function isDayDone(day){  
+  const st = getDayState(day);  
+  const c = st.checks;  
+  return !!(c.warmup && c.chunks && c.drills && c.roleplay && c.errorlog);  
+}  
+  
+/* =========================  
+   4) UI 헬퍼  
+   ========================= */  
+const el = (id)=>document.getElementById(id);  
+const toast = (msg)=>{  
+  const t = el("toast");  
+  t.textContent = msg;  
+  t.style.display = "block";  
+  clearTimeout(window.__toastTimer);  
+  window.__toastTimer = setTimeout(()=>t.style.display="none", 1200);  
+};  
+function escapeHtml(str){  
+  return (str||"")  
+    .replaceAll("&","&amp;")  
+    .replaceAll("<","&lt;")  
+    .replaceAll(">","&gt;")  
+    .replaceAll('"',"&quot;")  
+    .replaceAll("'","&#039;");  
+}  
+  
+let currentDay = 1;  
+  
+/* =========================  
+   5) Day 렌더  
+   ========================= */  
+function updateProgressKPI(){  
+  let done = 0;  
+  for(let d=1; d<=365; d++){  
+    if(isDayDone(d)) done++;  
+  }  
+  const pct = Math.round((done/365)*100);  
+  el("doneDays").textContent = done;  
+  el("donePct").textContent = pct + "%";  
+  el("meterBar").style.width = pct + "%";  
+}  
+  
+function renderChunks(planItem){  
+  const chunks = getChunksForDay(planItem);  
+  const box = el("chunksBox");  
+  box.innerHTML = "";  
+  chunks.forEach((c, i)=>{  
+    const item = document.createElement("div");  
+    item.className = "chunkItem";  
+    item.innerHTML = `  
+      <div class="chunkNum">${i+1}</div>  
+      <div class="chunkText">  
+        <b>${escapeHtml(c[0])}</b>  
+        <div>${escapeHtml(c[1])}</div>  
+      </div>  
+    `;  
+    box.appendChild(item);  
+  });  
+}  
+  
+function renderDay(day){  
+  currentDay = Math.min(365, Math.max(1, day));  
+  el("dayLabel").textContent = currentDay;  
+  el("dayInput").value = currentDay;  
+  
+  const p = PLAN[currentDay-1];  
+  el("scenarioTitle").textContent = p.scenario;  
+  el("themePill").textContent = p.theme;  
+  el("codeLabel").textContent = p.code;  
+  el("cycleLabel").textContent = p.cycle;  
+  el("weekLabel").textContent = p.weekInCycle || "-";  
+  el("cycleFocus").textContent = p.cycleFocus;  
+  el("cycleUpgrade").textContent = p.cycleUpgrade;  
+  el("routineText").textContent = p.routine;  
+  el("optText").textContent = p.optional;  
+  
+  renderChunks(p);  
+  
+  const st = getDayState(currentDay);  
+  
+  const items = [  
+    {key:"warmup",   label:"워밍업(3분): 어제 문장 3개 말하기"},  
+    {key:"chunks",   label:"Chunks(6개) 반복(7분)"},  
+    {key:"drills",   label:"패턴변형 12문장(7분)"},  
+    {key:"roleplay", label:"롤플레이 2라운드(10분)"},  
+    {key:"errorlog", label:"오답 3개 고정(3분)"},  
+    {key:"shadowing",label:"(옵션) 쉐도잉 5분"},  
+    {key:"recording",label:"(옵션) 45초 녹음 5분"},  
+    {key:"email",    label:"(선택) 이메일/메신저 체크(업무용)"},  
+  ];  
+  
+  const box = el("checklist");  
+  box.innerHTML = "";  
+  items.forEach(it=>{  
+    const lab = document.createElement("label");  
+    lab.className = "chk";  
+    const cb = document.createElement("input");  
+    cb.type="checkbox";  
+    cb.checked = !!st.checks[it.key];  
+    cb.addEventListener("change", ()=>{  
+      st.checks[it.key] = cb.checked;  
+      saveProgress(progress);  
+      updateProgressKPI();  
+      renderTable();  
+      renderCalendar();  
+    });  
+    const txt = document.createElement("div");  
+    txt.innerHTML = `<div>${it.label}</div><div class="muted">${it.key}</div>`;  
+    lab.appendChild(cb); lab.appendChild(txt);  
+    box.appendChild(lab);  
+  });  
+  
+  const eg = el("errorsGrid");  
+  eg.innerHTML = "";  
+  st.errors.forEach((e, idx)=>{  
+    const wrap = document.createElement("div");  
+    wrap.style.background = "rgba(0,0,0,.12)";  
+    wrap.style.border = "1px solid var(--line)";  
+    wrap.style.padding = "10px";  
+    wrap.style.borderRadius = "12px";  
+    wrap.innerHTML = `  
+      <div class="muted" style="margin-bottom:6px;color:#d9e6ff">오답 ${idx+1}</div>  
+      <input placeholder="내 문장(틀린/어색)" value="${escapeHtml(e.wrong)}" data-k="wrong" data-i="${idx}"  
+        style="width:100%;margin:6px 0;background:rgba(0,0,0,.12);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none;font-size:13px;" />  
+      <input placeholder="교정 문장(정답)" value="${escapeHtml(e.correct)}" data-k="correct" data-i="${idx}"  
+        style="width:100%;margin:6px 0;background:rgba(0,0,0,.12);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none;font-size:13px;" />  
+      <input placeholder="다음에 쓸 상황" value="${escapeHtml(e.situation)}" data-k="situation" data-i="${idx}"  
+        style="width:100%;margin:6px 0;background:rgba(0,0,0,.12);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none;font-size:13px;" />  
+    `;  
+    wrap.querySelectorAll("input").forEach(inp=>{  
+      inp.addEventListener("input", ()=>{  
+        const i = Number(inp.dataset.i);  
+        const k = inp.dataset.k;  
+        st.errors[i][k] = inp.value;  
+        saveProgress(progress);  
+      });  
+    });  
+    eg.appendChild(wrap);  
+  });  
+  
+  el("memo").value = st.memo;  
+  el("memo").oninput = ()=>{  
+    st.memo = el("memo").value;  
+    saveProgress(progress);  
+  };  
+  
+  updateProgressKPI();  
+}  
+  
+/* =========================  
+   6) 요약 표(필터)  
+   ========================= */  
+let showOnlyUndone = false;  
+  
+function fillCycleFilter(){  
+  const sel = el("filterCycle");  
+  for(let i=1;i<=13;i++){  
+    const opt = document.createElement("option");  
+    opt.value = String(i);  
+    opt.textContent = "Cycle " + i;  
+    sel.appendChild(opt);  
+  }  
+  const opt = document.createElement("option");  
+  opt.value = "Final";  
+  opt.textContent = "Final";  
+  sel.appendChild(opt);  
+}  
+  
+function renderTable(){  
+  const tbody = el("planTbody");  
+  const fCycle = el("filterCycle").value;  
+  const fTheme = el("filterTheme").value;  
+  tbody.innerHTML = "";  
+  
+  PLAN.forEach(p=>{  
+    if(fCycle !== "all" && String(p.cycle) !== fCycle) return;  
+    if(fTheme !== "all" && p.theme !== fTheme) return;  
+    if(showOnlyUndone && isDayDone(p.day)) return;  
+  
+    const tr = document.createElement("tr");  
+    tr.style.cursor = "pointer";  
+    tr.addEventListener("click", ()=>renderDay(p.day));  
+  
+    const done = isDayDone(p.day);  
+    tr.innerHTML = `  
+      <td>${p.day}</td>  
+      <td>${p.cycle}</td>  
+      <td>${p.weekInCycle || "-"}</td>  
+      <td>${p.theme}</td>  
+      <td>${escapeHtml(p.scenario)}</td>  
+      <td>${p.code}</td>  
+      <td class="${done ? "ok":"muted"}">${done ? "DONE":"-"}</td>  
+    `;  
+    tbody.appendChild(tr);  
+  });  
+}  
+  
+/* =========================  
+   7) 캘린더(월간)  
+   - Start date를 사용자가 지정 (추정/강제 없음)  
+   ========================= */  
+const DOWS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];  
+let calCursor = null; // Date (1st of visible month)  
+  
+function loadStartDate(){  
+  const raw = localStorage.getItem(STARTDATE_KEY);  
+  return raw ? new Date(raw) : null;  
+}  
+function saveStartDate(d){  
+  localStorage.setItem(STARTDATE_KEY, d.toISOString().slice(0,10));  
+}  
+  
+function dateOnly(d){  
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());  
+}  
+function addDays(d, n){  
+  const x = new Date(d);  
+  x.setDate(x.getDate()+n);  
+  return x;  
+}  
+function fmtMonth(d){  
+  return d.toLocaleDateString(undefined, {year:"numeric", month:"long"});  
+}  
+  
+function initCalendar(){  
+  // DOW header  
+  const dows = el("calDows");  
+  dows.innerHTML = "";  
+  DOWS.forEach(w=>{  
+    const div = document.createElement("div");  
+    div.className = "dow";  
+    div.textContent = w;  
+    dows.appendChild(div);  
+  });  
+  
+  // Start date input  
+  const start = loadStartDate();  
+  if(start){  
+    el("startDate").value = start.toISOString().slice(0,10);  
+    calCursor = new Date(start.getFullYear(), start.getMonth(), 1);  
+  } else {  
+    // 비워두고 사용자가 입력하도록  
+    el("startDate").value = "";  
+    calCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);  
+  }  
+  
+  el("startDate").addEventListener("change", ()=>{  
+    if(!el("startDate").value) return;  
+    const d = new Date(el("startDate").value + "T00:00:00");  
+    saveStartDate(d);  
+    calCursor = new Date(d.getFullYear(), d.getMonth(), 1);  
+    renderCalendar();  
+  });  
+  
+  el("calPrev").addEventListener("click", ()=>{  
+    calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()-1, 1);  
+    renderCalendar();  
+  });  
+  el("calNext").addEventListener("click", ()=>{  
+    calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+1, 1);  
+    renderCalendar();  
+  });  
+}  
+  
+function dayFromDate(dt){  
+  // start date가 있어야 날짜->Day로 매핑  
+  const start = loadStartDate();  
+  if(!start) return null;  
+  const a = dateOnly(start).getTime();  
+  const b = dateOnly(dt).getTime();  
+  const diff = Math.round((b-a)/(1000*60*60*24));  
+  const day = diff + 1;  
+  if(day < 1 || day > 365) return null;  
+  return day;  
+}  
+  
+function renderCalendar(){  
+  el("calMonthLabel").textContent = fmtMonth(calCursor);  
+  const grid = el("calGrid");  
+  grid.innerHTML = "";  
+  
+  const start = loadStartDate();  
+  const today = dateOnly(new Date());  
+  
+  const first = new Date(calCursor.getFullYear(), calCursor.getMonth(), 1);  
+  const firstDow = first.getDay();  
+  const monthEnd = new Date(calCursor.getFullYear(), calCursor.getMonth()+1, 0);  
+  const daysInMonth = monthEnd.getDate();  
+  
+  // show 6 weeks (42 cells)  
+  const totalCells = 42;  
+  for(let i=0;i<totalCells;i++){  
+    const cellIndex = i - firstDow + 1; // 1..daysInMonth  
+    const cellDate = new Date(calCursor.getFullYear(), calCursor.getMonth(), cellIndex);  
+    const inMonth = cellIndex >= 1 && cellIndex <= daysInMonth;  
+  
+    const div = document.createElement("div");  
+    div.className = "calCell" + (inMonth ? "" : " out");  
+  
+    const dayNum = inMonth ? cellIndex : cellDate.getDate();  
+    const mappedDay = dayFromDate(cellDate);  
+  
+    if(mappedDay && isDayDone(mappedDay)) div.classList.add("done");  
+    if(dateOnly(cellDate).getTime() === today.getTime()) div.classList.add("today");  
+  
+    let mini = "";  
+    if(mappedDay){  
+      const p = PLAN[mappedDay-1];  
+      mini = `${p.theme} · ${p.code}`;  
+    } else if(!start){  
+      mini = "Start date 미설정";  
+    } else {  
+      mini = "범위 밖";  
+    }  
+  
+    div.innerHTML = `  
+      <div class="dateLine">  
+        <div class="dateNum">${dayNum}</div>  
+        <div class="dayBadge">${mappedDay ? "Day "+mappedDay : ""}</div>  
+      </div>  
+      <div class="miniTag">${escapeHtml(mini)}</div>  
+    `;  
+  
+    div.addEventListener("click", ()=>{  
+      if(mappedDay) renderDay(mappedDay);  
+    });  
+  
+    grid.appendChild(div);  
+  }  
+}  
+  
+/* =========================  
+   8) 버튼들  
+   ========================= */  
+el("btnGo").addEventListener("click", ()=>renderDay(Number(el("dayInput").value)));  
+el("btnPrev").addEventListener("click", ()=>renderDay(currentDay-1));  
+el("btnNext").addEventListener("click", ()=>renderDay(currentDay+1));  
+el("dayInput").addEventListener("keydown", (e)=>{ if(e.key==="Enter") renderDay(Number(el("dayInput").value)); });  
+  
+el("btnSave").addEventListener("click", ()=>{  
+  saveProgress(progress);  
+  updateProgressKPI();  
+  renderTable();  
+  renderCalendar();  
+  toast("저장 완료");  
+});  
+  
+el("btnResetDay").addEventListener("click", ()=>{  
+  if(!confirm("오늘 데이터만 초기화할까요?")) return;  
+  progress[String(currentDay)] = defaultDayState();  
+  saveProgress(progress);  
+  renderDay(currentDay);  
+  renderTable();  
+  renderCalendar();  
+  toast("오늘 초기화");  
+});  
+  
+el("btnResetAll").addEventListener("click", ()=>{  
+  if(!confirm("전체 진행상황을 초기화할까요? (복구 불가)")) return;  
+  progress = {};  
+  saveProgress(progress);  
+  renderDay(currentDay);  
+  renderTable();  
+  renderCalendar();  
+  toast("전체 초기화");  
+});  
+  
+el("btnExport").addEventListener("click", ()=>{  
+  const blob = new Blob([JSON.stringify(progress, null, 2)], {type:"application/json"});  
+  const a = document.createElement("a");  
+  a.href = URL.createObjectURL(blob);  
+  a.download = "english365_progress.json";  
+  document.body.appendChild(a);  
+  a.click();  
+  a.remove();  
+  toast("내보내기 완료");  
+});  
+  
+el("btnImport").addEventListener("click", ()=> el("importFile").click());  
+el("importFile").addEventListener("change", async (e)=>{  
+  const file = e.target.files?.[0];  
+  if(!file) return;  
+  try{  
+    const text = await file.text();  
+    const obj = JSON.parse(text);  
+    if(typeof obj !== "object" || obj === null) throw new Error("Invalid JSON");  
+    progress = obj;  
+    saveProgress(progress);  
+    renderDay(currentDay);  
+    renderTable();  
+    renderCalendar();  
+    toast("가져오기 완료");  
+  }catch(err){  
+    alert("가져오기 실패: JSON 형식이 올바르지 않습니다.");  
+  }finally{  
+    e.target.value = "";  
+  }  
+});  
+  
+el("btnToday").addEventListener("click", ()=>{  
+  for(let d=1; d<=365; d++){  
+    if(!isDayDone(d)){ renderDay(d); return; }  
+  }  
+  renderDay(365);  
+});  
+  
+el("btnUndoneOnly").addEventListener("click", ()=>{  
+  showOnlyUndone = !showOnlyUndone;  
+  el("btnUndoneOnly").textContent = showOnlyUndone ? "전체 보기" : "미완료만";  
+  renderTable();  
+});  
+  
+el("filterCycle").addEventListener("change", renderTable);  
+el("filterTheme").addEventListener("change", renderTable);  
+  
+/* =========================  
+   9) 초기화  
+   ========================= */  
+fillCycleFilter();  
+initCalendar();  
+renderTable();  
+renderDay(1);  
+updateProgressKPI();  
+renderCalendar();  
+</script>  
+</body>  
+</html>  
